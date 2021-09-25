@@ -22,7 +22,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LifecycleRegistry;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
+
+import org.telegram.crypto.currency_ui.CurrencyList;
+import org.telegram.crypto.currency_ui.CurrencyViewModel;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.BuildVars;
 import org.telegram.messenger.ApplicationLoader;
@@ -64,11 +74,12 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
 
     private static final int PLAY_SERVICES_REQUEST_CHECK_SETTINGS = 140;
 
+    public static CurrencyViewModel currencyViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ApplicationLoader.postInitApplication();
         AndroidUtilities.checkDisplaySize(this, getResources().getConfiguration());
-
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setTheme(R.style.Theme_TMessages);
@@ -83,7 +94,10 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
             } catch (Exception ignore) {
 
             }
-        }
+        }/*
+        ViewModelProvider.Factory factory = new ViewModelProvider.NewInstanceFactory();
+        currencyViewModel = new ViewModelProvider((ViewModelStoreOwner) this, factory).get(CurrencyViewModel.class);*/
+
 
         getWindow().setBackgroundDrawableResource(R.drawable.transparent);
         super.onCreate(savedInstanceState);
@@ -105,9 +119,9 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
         actionBarLayout.setDrawerLayoutContainer(drawerLayoutContainer);
         actionBarLayout.init(mainFragmentsStack);
         actionBarLayout.setDelegate(this);
-
         if (actionBarLayout.fragmentsStack.isEmpty()) {
-            actionBarLayout.addFragmentToStack(getCurrentWalletFragment());
+            //actionBarLayout.addFragmentToStack(getCurrentWalletFragment());
+            actionBarLayout.addFragmentToStack(getCurrencyFragment());
         }
         drawerLayoutContainer.setAllowOpenDrawer(false, false);
 
@@ -149,6 +163,11 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
         } catch (Exception e) {
             FileLog.e(e);
         }
+    }
+    private BaseFragment getCurrencyFragment() {
+        BaseFragment fragment;
+        fragment = new CurrencyList(CurrencyList.TYPE_CREATE);
+        return fragment;
     }
 
     private BaseFragment getCurrentWalletFragment() {
@@ -200,7 +219,8 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
 
         if (!isNew) {
             if (actionBarLayout.fragmentsStack.isEmpty()) {
-                actionBarLayout.addFragmentToStack(getCurrentWalletFragment());
+                //actionBarLayout.addFragmentToStack(getCurrentWalletFragment());
+                actionBarLayout.addFragmentToStack(getCurrencyFragment());
             }
         }
 
@@ -211,7 +231,8 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
                 builder.setTitle(LocaleController.getString("Wallet", R.string.Wallet));
                 builder.setMessage(LocaleController.getString("WalletTonLinkNoWalletText", R.string.WalletTonLinkNoWalletText));
                 builder.setNegativeButton(LocaleController.getString("Cancel", R.string.Cancel), null);
-                builder.setPositiveButton(LocaleController.getString("WalletTonLinkNoWalletCreateWallet", R.string.WalletTonLinkNoWalletCreateWallet), (dialog, which) -> presentFragment(new WalletCreateActivity(WalletCreateActivity.TYPE_CREATE)));
+                builder.setPositiveButton(LocaleController.getString("WalletTonLinkNoWalletCreateWallet", R.string.WalletTonLinkNoWalletCreateWallet),
+                        (dialog, which) -> presentFragment(new WalletCreateActivity(WalletCreateActivity.TYPE_CREATE)));
                 builder.show();
             } else if (!actionBarLayout.fragmentsStack.isEmpty()) {
                 if (actionBarLayout.fragmentsStack.size() > 1) {

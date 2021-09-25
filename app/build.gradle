@@ -12,15 +12,29 @@ configurations {
 
 
 dependencies {
+    def room_version = "2.4.0-alpha02"
+    /*implementation 'androidx.core:core:1.7.0-beta01'
+    implementation 'androidx.exifinterface:exifinterface:1.3.3'
+
+    implementation 'com.google.android.gms:play-services-vision:20.1.3'
+*/
     implementation 'androidx.core:core:1.1.0-beta01'
     implementation 'androidx.exifinterface:exifinterface:1.2.0'
 
     implementation 'com.google.android.gms:play-services-vision:16.2.0'
+
+    implementation 'com.squareup.retrofit2:retrofit:2.7.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.7.0'
+    implementation "android.arch.persistence.room:runtime:$room_version"
+    annotationProcessor "android.arch.persistence.room:compiler:$room_version"
 }
 
 android {
     compileSdkVersion 29
-    buildToolsVersion '29.0.3'
+    //compileSdkVersion 31
+    //buildToolsVersion '29.0.3'
+    buildToolsVersion "30.0.3"
+    //ndkVersion "23.0.7599858"
     ndkVersion "20.0.5594570"
 
     defaultConfig.applicationId = "org.telegram.testwallet"
@@ -50,10 +64,10 @@ android {
 
     signingConfigs {
         release {
-            storeFile file("config/release.keystore")
-            storePassword RELEASE_STORE_PASSWORD
-            keyAlias RELEASE_KEY_ALIAS
-            keyPassword RELEASE_KEY_PASSWORD
+            storeFile file("config/release.keystore.jks")
+            storePassword 'winux@wallet'
+            keyAlias 'walletKey'
+            keyPassword 'wallet@key'
         }
     }
 
@@ -161,7 +175,7 @@ android {
             output.getProcessManifestProvider().get().doLast {
                 def abiVersion = variant.productFlavors.get(0).abiVersionCode
 
-                def outputDir = manifestOutputDirectory
+                def outputDir = multiApkManifestOutputDirectory
                 File directory
                 if (outputDir instanceof File) {
                     directory = outputDir
@@ -187,14 +201,16 @@ android {
 
     defaultConfig {
         minSdkVersion 18
-        targetSdkVersion 28
+        targetSdkVersion 29
+        //minCompileSdk 18
+        //targetSdkVersion 31
         versionName "1.2"
-
+        //ndkVersion "23.0.7599858"
         vectorDrawables.generatedDensities = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi']
 
         externalNativeBuild {
             ndkBuild {
-                arguments "NDK_APPLICATION_MK:=jni/Application.mk", "APP_PLATFORM:=android-16", "--jobs=8"
+                arguments "NDK_APPLICATION_MK:=jni/Application.mk", "APP_PLATFORM:=android-18", "--jobs=8","NDK_PROJECT_PATH:=/home/winux/Android/Sdk/ndk/23.0.7599858"
                 abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
             }
         }
