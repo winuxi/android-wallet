@@ -2,8 +2,14 @@ package org.telegram.crypto.currency_ui;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
@@ -21,8 +27,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.telegram.crypto.models.Currency;
 import org.telegram.messenger.R;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicReference;
+
+import static android.os.FileUtils.copy;
+
 @SuppressLint("ResourceType")
 public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.ContentHolder> {
     private List<Currency> currencies = new ArrayList<>();
@@ -46,18 +61,25 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Conten
     @Override
     public void onBindViewHolder(@NonNull CurrencyAdapter.ContentHolder holder, int position) {
         Currency currency = currencies.get(position);
+
         String title_kit = currency.getName();
-        if(position == 0){
+        if (position == 0) {
             holder.getRow().setBackgroundColor(Color.GRAY);
             holder.market.setText(currency.getMarketCap());
             holder.volume.setText(currency.getVolume());
-        }else {
-            title_kit = "<strong>"+currency.getName() +"</strong><font color='#F48221'>  "+currency.getSymbol()+"</font>";
+            Drawable res = ResourcesCompat.getDrawable(
+                    context.getResources(), R.drawable.common_google_signin_btn_icon_dark_normal, null);
+
+        } else {
+            title_kit = "<strong>" + currency.getName() + "</strong><font color='#F48221'>  " + currency.getSymbol() + "</font>";
             //holder.price.setTextColor(evaluate(currency.getPrice()));
             holder.today.setTextColor(evaluate(currency.getToday()));
-            holder.week.setTextColor(evaluate(currency.getWeek()));Drawable res = ResourcesCompat.getDrawable(
-                    context.getResources(), R.drawable.common_google_signin_btn_icon_dark_normal, null);
-            holder.icon.setImageDrawable(res);
+            holder.week.setTextColor(evaluate(currency.getWeek()));
+
+            //LoadImageFromWebOperations(currency.getIcon(),holder.icon);
+            ImageLoadTask loadTask = new ImageLoadTask(currency.getIcon(),holder.icon);
+            loadTask.execute();
+            //holder.icon.setImageDrawable(drawable);
             holder.market.setText(toCurrency(currency.getMarketCap()));
             //holder.market.setTextColor(evaluate(currency.getMarketCap()));
 
@@ -72,15 +94,46 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Conten
         holder.week.setText(currency.getWeek());
 
     }
-    public String toCurrency(String num){
+
+    private Drawable LoadImageFromWebOperations(String url, ImageView imageView) {
+        Log.d("icon_url", "url: " + url);
+        AtomicReference<Drawable> drawable = new AtomicReference<>();
+        if (url != null) {
+            AtomicReference<InputStream> is = new AtomicReference<>();
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            Handler handler = new Handler(Looper.getMainLooper());
+            executor.execute(() -> {
+                try {
+                    is.set((InputStream) new URL(url).getContent());
+
+                    Bitmap bitmap = BitmapFactory.decodeStream(is.get());
+                    drawable.set(new BitmapDrawable(context.getResources(), bitmap));
+                    //drawable.set(Drawable.createFromStream(is.get(), "src name"));
+                } catch (Exception e) {
+                    System.out.println("icon_e=" + e);
+                    drawable.set(ResourcesCompat.getDrawable(
+                            context.getResources(), R.drawable.common_google_signin_btn_icon_dark_normal, null));
+                }
+                handler.post(() -> {
+                    drawable.set(Drawable.createFromStream(is.get(), "1.png"));
+                    imageView.setImageDrawable(drawable.get());
+                    //UI Thread work here
+                });
+            });
+        }
+        return drawable.get();
+    }
+
+    public String toCurrency(String num) {
         return "$".concat(num);
     }
-    public int evaluate(String data){
+
+    public int evaluate(String data) {
         data.trim();
         int stat = Color.GREEN;
-        if(data.startsWith("-")){
+        if (data.startsWith("-")) {
             stat = Color.RED;
-        }else if(data.startsWith("0")){
+        } else if (data.startsWith("0")) {
             stat = Color.GRAY;
         }
         return stat;
@@ -101,17 +154,17 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Conten
                 pr.addRule(RelativeLayout.CENTER_VERTICAL);
                 pr.setMargins(3, 3, 3, 2);
                 if (x != 2) {
-                    if(x != 5){
+                    if (x != 5) {
                         pr.addRule(RelativeLayout.END_OF, x - 1);
-                    }else {
+                    } else {
                         pr.addRule(RelativeLayout.END_OF, x - 3);
                     }
                     text.setTextColor(Color.BLUE);
                     pr.width = 300;
                     text.setGravity(Gravity.RIGHT);
-                }else {
+                } else {
                     pr.addRule(RelativeLayout.END_OF, 1);
-                        pr.width = 200;
+                    pr.width = 200;
                 }
                 // root.addView(text);
             } else {
@@ -142,6 +195,7 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Conten
         TextView market;
         TextView volume;
         View row;
+
         public ContentHolder(@NonNull View itemView) {
             super(itemView);
             row = itemView;
@@ -161,7 +215,8 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Conten
                 }
             });
         }
-        public View getRow(){
+
+        public View getRow() {
             return row;
         }
     }
@@ -190,9 +245,9 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Conten
         RelativeLayout.LayoutParams lin = new RelativeLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 70);
-        RelativeLayout.LayoutParams pr = new RelativeLayout.LayoutParams(70,70);
+        RelativeLayout.LayoutParams pr = new RelativeLayout.LayoutParams(40, 40);
 
-        lin.setMargins(5,5,5,5);
+        lin.setMargins(5, 5, 5, 5);
         relativeLayout.setLayoutParams(lin);
         icon = new ImageView(context);
         icon.setId(1);
@@ -228,5 +283,39 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Conten
         relativeLayout.addView(volume);
         settup_textVews(relativeLayout);
         return relativeLayout;
+    }
+    public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
+
+        private String url;
+        private ImageView imageView;
+
+        public ImageLoadTask(String url, ImageView imageView) {
+            this.url = url;
+            this.imageView = imageView;
+        }
+
+        @Override
+        protected Bitmap doInBackground(Void... params) {
+            try {
+                URL urlConnection = new URL(url);
+                HttpURLConnection connection = (HttpURLConnection) urlConnection
+                        .openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                Bitmap myBitmap = BitmapFactory.decodeStream(input);
+                return myBitmap;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            super.onPostExecute(result);
+            imageView.setImageBitmap(result);
+        }
+
     }
 }

@@ -32,13 +32,10 @@ import org.telegram.crypto.models.Data;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.BuildVars;
 import org.telegram.messenger.R;
-import org.telegram.messenger.UserConfig;
-import org.telegram.ui.ActionBar.ActionBar;
 import org.telegram.ui.ActionBar.ActionBarPopupWindow;
 import org.telegram.ui.ActionBar.BaseFragment;
 import org.telegram.ui.ActionBar.Theme;
 import org.telegram.ui.Components.LayoutHelper;
-import org.telegram.ui.Wallet.WalletCreateActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -302,11 +299,14 @@ public class CurrencyList extends BaseFragment implements LifecycleOwner {
             });
         }
     }
+
     public void prepare_data(List<Data> data_list){
         List<Currency> currencies = new ArrayList<>();
-        Currency c = new Currency(0,"Name","","","Price","24h%",
+        Currency c = new Currency(0, "", "Name","","","Price","24h%",
                 "7d%","Market Cap","Volume(24h)");
         currencies.add(c);
+        int x;
+
         for (Data data:data_list){
             currencies.add(toLocalModel(data));
         }
@@ -326,7 +326,7 @@ public class CurrencyList extends BaseFragment implements LifecycleOwner {
     }
     public Currency toLocalModel(Data data){
         return new Currency(
-                data.getId(),data.getName(),data.getSymbol(),data.getSlug(),data.getQuote().getUsd().getPrice(),
+                data.getId(),RequestMan.icon_url+ data.getId()+".png",data.getName(),data.getSymbol(),data.getSlug(),data.getQuote().getUsd().getPrice(),
                 data.getQuote().getUsd().getPercent_change_24h(),data.getQuote().getUsd().getPercent_change_7d(),
                 data.getQuote().getUsd().getMarket_cap(),data.getQuote().getUsd().getVolume_24h()
         );

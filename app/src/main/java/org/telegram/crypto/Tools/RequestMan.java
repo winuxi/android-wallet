@@ -17,6 +17,7 @@ public class RequestMan {
     public static int START = 1;
     public static String CONVERT = "USD";
     public static String DATABASE = "CurrencyDB";
+    public static String icon_url = "https://s2.coinmarketcap.com/static/img/coins/64x64/";
     public static ApiProvider service(Context context){
         String remote_url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/";
         Retrofit retrofit =  new Retrofit.Builder()

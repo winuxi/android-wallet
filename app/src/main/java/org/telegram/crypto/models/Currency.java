@@ -3,8 +3,6 @@ package org.telegram.crypto.models;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import java.util.List;
-
 @Entity(tableName = "currency")
 public class Currency {
     @PrimaryKey
@@ -19,8 +17,9 @@ public class Currency {
     String marketCap;
     String volume;
 
-    public Currency(int id, String name, String symbol, String slug, String price, String today, String week, String marketCap, String volume) {
+    public Currency(int id, String icon, String name, String symbol, String slug, String price, String today, String week, String marketCap, String volume) {
         this.id = id;
+        this.icon = icon;
         this.name = name;
         this.symbol = symbol;
         this.slug = slug;

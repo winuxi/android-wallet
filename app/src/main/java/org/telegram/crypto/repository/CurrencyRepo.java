@@ -98,7 +98,7 @@ public class CurrencyRepo {
     }
     public Currency toLocalModel(Data data){
         return new Currency(
-                data.getId(),data.getSymbol(),data.getName(),data.getSlug(),data.getQuote().getUsd().getPrice(),
+                data.getId(), RequestMan.icon_url + data.getId() + ".jpg", data.getSymbol(),data.getName(),data.getSlug(),data.getQuote().getUsd().getPrice(),
                 data.getQuote().getUsd().getPercent_change_24h(),data.getQuote().getUsd().getPercent_change_7d(),
                 data.getQuote().getUsd().getMarket_cap(),data.getQuote().getUsd().getVolume_24h()
         );

@@ -22,5 +22,11 @@ public interface ApiProvider {
             @Query("limit") int limit,
             @Query("convert") String convert,
             @Query("CMC_PRO_API_KEY") String CMC_PRO_API_KEY);
+    @GET("info")
+    Call<CurrencyResponse> load_info(
+           /* @Query("start") int start,
+            @Query("limit") int limit,
+            @Query("convert") String convert,*/
+            @Query("CMC_PRO_API_KEY") String CMC_PRO_API_KEY);
 
 }
