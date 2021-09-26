@@ -53,7 +53,7 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Conten
             holder.volume.setText(currency.getVolume());
         }else {
             title_kit = "<strong>"+currency.getName() +"</strong><font color='#F48221'>  "+currency.getSymbol()+"</font>";
-            holder.price.setTextColor(evaluate(currency.getPrice()));
+            //holder.price.setTextColor(evaluate(currency.getPrice()));
             holder.today.setTextColor(evaluate(currency.getToday()));
             holder.week.setTextColor(evaluate(currency.getWeek()));Drawable res = ResourcesCompat.getDrawable(
                     context.getResources(), R.drawable.common_google_signin_btn_icon_dark_normal, null);
@@ -65,7 +65,7 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Conten
         }
         holder.name.setText(Html.fromHtml(title_kit));
 
-        holder.price.setText(currency.getPrice());
+        holder.price.setText(toCurrency(currency.getPrice()));
 
         holder.today.setText(currency.getToday());
 
