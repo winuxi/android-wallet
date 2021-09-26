@@ -54,22 +54,27 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Conten
     @Override
     public CurrencyAdapter.ContentHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_blogs,parent,false);
-
         return new CurrencyAdapter.ContentHolder(one_row(context));
     }
 
+    public void toWhite(TextView view){
+        view.setTextColor(Color.WHITE);
+    }
     @Override
     public void onBindViewHolder(@NonNull CurrencyAdapter.ContentHolder holder, int position) {
         Currency currency = currencies.get(position);
 
         String title_kit = currency.getName();
         if (position == 0) {
-            holder.getRow().setBackgroundColor(Color.GRAY);
+            toWhite(holder.name);
+            toWhite(holder.today);
+            toWhite(holder.week);
+            toWhite(holder.market);
+            toWhite(holder.volume);
+            toWhite(holder.price);
+            holder.getRow().setBackgroundColor(Color.DKGRAY);
             holder.market.setText(currency.getMarketCap());
             holder.volume.setText(currency.getVolume());
-            Drawable res = ResourcesCompat.getDrawable(
-                    context.getResources(), R.drawable.common_google_signin_btn_icon_dark_normal, null);
-
         } else {
             title_kit = "<strong>" + currency.getName() + "</strong><font color='#F48221'>  " + currency.getSymbol() + "</font>";
             //holder.price.setTextColor(evaluate(currency.getPrice()));
@@ -146,11 +151,11 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Conten
             root.getChildCount();
             text = root.findViewById(x);
             if (text != null) {
-                text.setPadding(5, 5, 5, 5);
+                text.setPadding(5, 0, 5, 0);
                 RelativeLayout.LayoutParams pr = (RelativeLayout.LayoutParams) text.getLayoutParams();
                 text.setTextColor(Color.BLACK);
                 text.setTextSize(13);
-                pr.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
+                pr.height = 30;
                 pr.addRule(RelativeLayout.CENTER_VERTICAL);
                 pr.setMargins(3, 3, 3, 2);
                 if (x != 2) {
@@ -248,9 +253,11 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Conten
         RelativeLayout.LayoutParams pr = new RelativeLayout.LayoutParams(40, 40);
 
         lin.setMargins(5, 5, 5, 5);
+        relativeLayout.setBackgroundColor(Color.WHITE);
         relativeLayout.setLayoutParams(lin);
         icon = new ImageView(context);
         icon.setId(1);
+        pr.setMargins(2,15,2,2);
         pr.addRule(Gravity.CENTER);
         icon.setLayoutParams(pr);
         relativeLayout.addView(icon);

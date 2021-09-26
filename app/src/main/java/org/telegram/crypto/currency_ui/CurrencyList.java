@@ -254,6 +254,8 @@ public class CurrencyList extends BaseFragment implements LifecycleOwner {
         horizontalScrollView.addView(currency_list);
         relativeLayout.addView(horizontalScrollView);
         sync_currencies(context);
+
+        relativeLayout.setBackgroundColor(Color.GRAY);
         return relativeLayout;
         //return currency_list;
     }
