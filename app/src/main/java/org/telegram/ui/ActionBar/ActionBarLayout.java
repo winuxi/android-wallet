@@ -181,6 +181,7 @@ public class ActionBarLayout extends FrameLayout {
     private ActionBarLayoutDelegate delegate;
     protected Activity parentActivity;
 
+
     public ArrayList<BaseFragment> fragmentsStack;
 
     public ActionBarLayout(Context context) {

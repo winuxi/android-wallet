@@ -20,6 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityManager;
 
+import androidx.fragment.app.Fragment;
+
 import org.telegram.messenger.AccountInstance;
 import org.telegram.messenger.NotificationCenter;
 import org.telegram.messenger.TonController;

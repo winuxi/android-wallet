@@ -29,7 +29,10 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStore;
 import androidx.lifecycle.ViewModelStoreOwner;
+
+import com.google.android.gms.common.api.internal.LifecycleActivity;
 
 import org.telegram.crypto.currency_ui.CurrencyList;
 import org.telegram.crypto.currency_ui.CurrencyViewModel;
@@ -51,7 +54,8 @@ import org.telegram.ui.Wallet.WalletCreateActivity;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class LaunchActivity extends Activity implements ActionBarLayout.ActionBarLayoutDelegate {
+public class LaunchActivity extends Activity implements
+        ActionBarLayout.ActionBarLayoutDelegate {
 
     private boolean finished;
     private static ArrayList<BaseFragment> mainFragmentsStack = new ArrayList<>();
@@ -71,7 +75,7 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
     private HashMap<String, String> englishLocaleStrings;
 
     private boolean tabletFullSize;
-
+    public static CurrencyViewModel viewModel;
     private static final int PLAY_SERVICES_REQUEST_CHECK_SETTINGS = 140;
 
     public static CurrencyViewModel currencyViewModel;
@@ -81,6 +85,9 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
         ApplicationLoader.postInitApplication();
         AndroidUtilities.checkDisplaySize(this, getResources().getConfiguration());
 
+        /*viewModel = new ViewModelProvider(this )
+                .get(CurrencyViewModel.class);
+*/
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setTheme(R.style.Theme_TMessages);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -494,4 +501,6 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
     public void onRebuildAllFragments(ActionBarLayout layout, boolean last) {
 
     }
+
+
 }

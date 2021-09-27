@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey;
 public class Currency {
     @PrimaryKey
     int id;
+    int rank;
     String icon;
     String name;
     String symbol;
@@ -16,8 +17,12 @@ public class Currency {
     String week;
     String marketCap;
     String volume;
+    String circulating_supply;
 
-    public Currency(int id, String icon, String name, String symbol, String slug, String price, String today, String week, String marketCap, String volume) {
+    public Currency(int rank, int id, String icon, String name, String symbol,
+                    String slug, String price, String today, String week,
+                    String marketCap, String volume, String circulating_supply) {
+        this.rank = rank;
         this.id = id;
         this.icon = icon;
         this.name = name;
@@ -28,6 +33,15 @@ public class Currency {
         this.week = week;
         this.marketCap = marketCap;
         this.volume = volume;
+        this.circulating_supply = circulating_supply;
+    }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
     }
 
     public int getId() {
@@ -108,5 +122,13 @@ public class Currency {
 
     public void setVolume(String volume) {
         this.volume = volume;
+    }
+
+    public String getCirculating_supply() {
+        return circulating_supply;
+    }
+
+    public void setCirculating_supply(String circulating_supply) {
+        this.circulating_supply = circulating_supply;
     }
 }

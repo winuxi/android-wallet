@@ -20,8 +20,12 @@ import android.widget.TextView;
 import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -46,7 +50,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CurrencyList extends BaseFragment implements LifecycleOwner {
+import static org.telegram.ui.LaunchActivity.viewModel;
+
+public class CurrencyList extends BaseFragment{
     private TextView status;
     private ScrollView scrollView;
     private Runnable cancelOnDestroyRunnable;
@@ -90,13 +96,6 @@ public class CurrencyList extends BaseFragment implements LifecycleOwner {
 
     HorizontalScrollView horizontalScrollView;
     ScrollView scrollViewX;
-
-    @NonNull
-    @Override
-    public Lifecycle getLifecycle() {
-        return null;
-    }
-
     public CurrencyList(int type) {
         super();
         currentType = type;
@@ -140,7 +139,7 @@ public class CurrencyList extends BaseFragment implements LifecycleOwner {
         actionBar.setItemsBackgroundColor(Theme.getColor(Theme.key_actionBarWhiteSelector), false);
         actionBar.setCastShadows(false);
         actionBar.setAddToContainer(false);
-        actionBar.setBackgroundColor(Color.CYAN);
+        actionBar.setBackgroundColor(Color.DKGRAY);
         if (!AndroidUtilities.isTablet()) {
             actionBar.showActionModeTop();
         }
@@ -153,13 +152,17 @@ public class CurrencyList extends BaseFragment implements LifecycleOwner {
             }
 
             status.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteBlueText2));
-            status.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
+            status.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
             status.setText("Request");
             status.setGravity(Gravity.CENTER_VERTICAL);
+            actionBar.setLayoutParams(
+                    new RelativeLayout.LayoutParams(
+                            RelativeLayout.LayoutParams.MATCH_PARENT,
+                            50));
             actionBar.addView(status, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT,
                     LayoutHelper.WRAP_CONTENT,
                     Gravity.CENTER,
-                    0, 0, 22, 0));
+                    0, 15, 0, 0));
             status.setOnClickListener(v -> {
                 sync_currencies(context);
             });
@@ -213,7 +216,6 @@ public class CurrencyList extends BaseFragment implements LifecycleOwner {
         return fragmentView;
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
@@ -234,11 +236,12 @@ public class CurrencyList extends BaseFragment implements LifecycleOwner {
     }
 
     public RelativeLayout setup_ui(Context context) {
+
         horizontalScrollView = new HorizontalScrollView(context);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.addRule(ScrollView.SCROLL_AXIS_HORIZONTAL);
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        //layoutParams.addRule(ScrollView.SCROLL_AXIS_HORIZONTAL);
         horizontalScrollView.setLayoutParams(layoutParams);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -253,6 +256,12 @@ public class CurrencyList extends BaseFragment implements LifecycleOwner {
 
         horizontalScrollView.addView(currency_list);
         relativeLayout.addView(horizontalScrollView);
+        /*viewModel.getCurrencies().observe(this, new Observer<List<Currency>>() {
+            @Override
+            public void onChanged(List<Currency> currencies) {
+                currencyAdapter.setCurrencies(currencies);
+            }
+        });*/
         sync_currencies(context);
 
         relativeLayout.setBackgroundColor(Color.GRAY);
@@ -261,7 +270,7 @@ public class CurrencyList extends BaseFragment implements LifecycleOwner {
     }
     public void sync_currencies(Context context) {
         if (!is_active) {
-            status.setText("Loading");
+            status.setText("Loading....");
             is_active = true;
             Call<CurrencyResponse> call = RequestMan.service(context)
                     .load_currency(
@@ -304,8 +313,8 @@ public class CurrencyList extends BaseFragment implements LifecycleOwner {
 
     public void prepare_data(List<Data> data_list){
         List<Currency> currencies = new ArrayList<>();
-        Currency c = new Currency(0, "", "Name","","","Price","24h%",
-                "7d%","Market Cap","Volume(24h)");
+        Currency c = new Currency(1, 0, "", "Name","","","Price","24h%",
+                "7d%","Market Cap","Volume(24h)","");
         currencies.add(c);
         int x;
 
@@ -327,10 +336,12 @@ public class CurrencyList extends BaseFragment implements LifecycleOwner {
         }
     }
     public Currency toLocalModel(Data data){
+
         return new Currency(
-                data.getId(),RequestMan.icon_url+ data.getId()+".png",data.getName(),data.getSymbol(),data.getSlug(),data.getQuote().getUsd().getPrice(),
+                1,data.getId(),RequestMan.icon_url+ data.getId()+".png",data.getName(),data.getSymbol(),data.getSlug(),data.getQuote().getUsd().getPrice(),
                 data.getQuote().getUsd().getPercent_change_24h(),data.getQuote().getUsd().getPercent_change_7d(),
-                data.getQuote().getUsd().getMarket_cap(),data.getQuote().getUsd().getVolume_24h()
+                data.getQuote().getUsd().getMarket_cap(),data.getQuote().getUsd().getVolume_24h(),data.getCirculating_supply()
         );
     }
+
 }

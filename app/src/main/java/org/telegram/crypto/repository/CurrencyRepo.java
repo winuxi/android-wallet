@@ -4,6 +4,8 @@ import android.app.Application;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -91,6 +93,7 @@ public class CurrencyRepo {
             executor.execute(() -> {
                 //doaOperation.update_currencies(currencies);
                 handler.post(() -> {
+                    Toast.makeText(application,"Data Updated",Toast.LENGTH_LONG).show();
                     //UI Thread work here
                 });
             });
@@ -98,10 +101,10 @@ public class CurrencyRepo {
     }
     public Currency toLocalModel(Data data){
         return new Currency(
-                data.getId(), RequestMan.icon_url + data.getId() + ".jpg", data.getSymbol(),data.getName(),data.getSlug(),data.getQuote().getUsd().getPrice(),
+                1, data.getId(), RequestMan.icon_url + data.getId() + ".jpg", data.getSymbol(),data.getName(),data.getSlug(),data.getQuote().getUsd().getPrice(),
                 data.getQuote().getUsd().getPercent_change_24h(),data.getQuote().getUsd().getPercent_change_7d(),
-                data.getQuote().getUsd().getMarket_cap(),data.getQuote().getUsd().getVolume_24h()
-        );
+                data.getQuote().getUsd().getMarket_cap(),data.getQuote().getUsd().getVolume_24h(),
+                data.getCirculating_supply());
     }
 
 }
