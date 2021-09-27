@@ -231,7 +231,7 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Conten
                 icon = root.findViewById(x);
                 RelativeLayout.LayoutParams pri = (RelativeLayout.LayoutParams) icon.getLayoutParams();
                 pri.addRule(RelativeLayout.END_OF, 0);
-                pri.setMargins(50,13,2,2);
+                pri.setMargins(50,5,2,2);
                 icon.setLayoutParams(pri);
                 //continue;
             }else {
