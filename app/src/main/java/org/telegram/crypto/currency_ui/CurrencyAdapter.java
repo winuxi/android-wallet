@@ -45,7 +45,6 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Conten
     @NonNull
     @Override
     public CurrencyAdapter.ContentHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_blogs,parent,false);
         return new CurrencyAdapter.ContentHolder(create_item(context));
     }
 
@@ -70,12 +69,14 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Conten
             holder.market.setText(currency.getMarketCap());
             holder.volume.setText(currency.getVolume());
             holder.volumex.setVisibility(View.GONE);
+            holder.price.setText(currency.getPrice());
         } else {
             holder.rank.setText(position+".");
             title_kit = "<strong>" + currency.getName() + "</strong><font color='#F48221'>  " + currency.getSymbol() + "</font>";
             holder.today.setTextColor(evaluate(currency.getToday()));
             holder.week.setTextColor(evaluate(currency.getWeek()));
 
+            holder.price.setText(toCurrency(currency.getPrice()));
             ImageLoadTask loadTask = new ImageLoadTask(currency.getIcon(), holder.icon);
             loadTask.execute();
             holder.market.setText(toCurrency(currency.getMarketCap()));
@@ -85,7 +86,6 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Conten
         }
         holder.name.setText(Html.fromHtml(title_kit));
 
-        holder.price.setText(toCurrency(currency.getPrice()));
 
         holder.today.setText(toPercent(currency.getToday()));
 
@@ -179,8 +179,6 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Conten
         relativeLayout.setLayoutParams(lin);
         icon = new ImageView(context);
         icon.setId(1);
-        //pr.setMargins(2,15,2,2);
-        //pr.addRule(Gravity.CENTER);
         icon.setLayoutParams(pr);
         relativeLayout.addView(icon);
         rank = new TextView(context);
@@ -192,11 +190,8 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Conten
 
         symbol = new TextView(context);
         symbol.setId(3);
-        //relativeLayout.addView(symbol);
         cmd = new TextView(context);
         cmd.setId(4);
-        //relativeLayout.addView(cmd);
-
         today = new TextView(context);
         today.setId(6);
         relativeLayout.addView(today);
@@ -279,7 +274,6 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Conten
                 }
                 pr.addRule(RelativeLayout.CENTER_VERTICAL);
                 pr.setMargins(3, 3, 3, 2);
-                // root.addView(text);
             } else {
                 Log.d("no_view", "childes:  " + root.getChildCount() + " at: " + x);
             }

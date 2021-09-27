@@ -23,6 +23,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import androidx.annotation.Keep;
+import androidx.lifecycle.LifecycleRegistry;
+
 import android.view.Gravity;
 import android.view.HapticFeedbackConstants;
 import android.view.KeyEvent;
@@ -48,6 +50,7 @@ import java.util.ArrayList;
 public class ActionBarLayout extends FrameLayout {
 
     public interface ActionBarLayoutDelegate {
+        LifecycleRegistry getLifecycle();
         boolean onPreIme();
         boolean needPresentFragment(BaseFragment fragment, boolean removeLast, boolean forceWithoutAnimation, ActionBarLayout layout);
         boolean needAddFragmentToStack(BaseFragment fragment, ActionBarLayout layout);

@@ -55,7 +55,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class LaunchActivity extends Activity implements
-        ActionBarLayout.ActionBarLayoutDelegate {
+        ActionBarLayout.ActionBarLayoutDelegate, LifecycleOwner {
 
     private boolean finished;
     private static ArrayList<BaseFragment> mainFragmentsStack = new ArrayList<>();
@@ -79,13 +79,19 @@ public class LaunchActivity extends Activity implements
     private static final int PLAY_SERVICES_REQUEST_CHECK_SETTINGS = 140;
 
     public static CurrencyViewModel currencyViewModel;
+    private LifecycleRegistry lifecycleRegistry = new LifecycleRegistry(this);
 
+    @Override
+    public LifecycleRegistry getLifecycle() {
+        return lifecycleRegistry;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ApplicationLoader.postInitApplication();
         AndroidUtilities.checkDisplaySize(this, getResources().getConfiguration());
 
-        /*viewModel = new ViewModelProvider(this )
+        lifecycleRegistry = new LifecycleRegistry(this);
+        /*viewModel = new ViewModelProvider((ViewModelStoreOwner) this)
                 .get(CurrencyViewModel.class);
 */
         requestWindowFeature(Window.FEATURE_NO_TITLE);

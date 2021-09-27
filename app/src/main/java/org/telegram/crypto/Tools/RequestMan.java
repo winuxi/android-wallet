@@ -29,8 +29,7 @@ public class RequestMan {
     }
     //client
     public static OkHttpClient getClient(Context context) {
-        //String token = UserManager.getInstance(context).getToken();
-        String token = "UserManager.getInstance(context).getToken()";
+        String token = "";
         return new OkHttpClient.Builder().readTimeout(9, TimeUnit.SECONDS)
                 .connectTimeout(9, TimeUnit.SECONDS).
                         addInterceptor(chain -> {

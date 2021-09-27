@@ -17,14 +17,6 @@ import org.telegram.crypto.models.Currency;
 @Database(entities = {
         Currency.class},
         version = 2)
-// Database class after the version update.
-/*@Database(
-        version = 2,
-        entities = {ZoeNotifs.class},
-        autoMigrations = {
-                @AutoMigration (from = 1, to = 2)
-        }
-)*/
 public abstract class RoomDB extends RoomDatabase {
     private static RoomDB instance;
     private static Context context;

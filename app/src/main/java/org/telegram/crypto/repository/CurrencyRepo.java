@@ -91,7 +91,7 @@ public class CurrencyRepo {
             ExecutorService executor = Executors.newSingleThreadExecutor();
             Handler handler = new Handler(Looper.getMainLooper());
             executor.execute(() -> {
-                //doaOperation.update_currencies(currencies);
+                doaOperation.update_currencies(currencies);
                 handler.post(() -> {
                     Toast.makeText(application,"Data Updated",Toast.LENGTH_LONG).show();
                     //UI Thread work here

@@ -57,37 +57,14 @@ public class CurrencyList extends BaseFragment{
     private ScrollView scrollView;
     private Runnable cancelOnDestroyRunnable;
 
-    private ActionBarPopupWindow.ActionBarPopupWindowLayout hintPopupLayout;
     private CurrencyAdapter currencyAdapter;
-    private AnimatorSet actionBarAnimator;
-
     private int currentType;
 
-    private boolean changingPasscode;
-    private boolean exportingWords;
-    private boolean resumeCreation;
-    private String[] secretWords;
-    private String[] hintWords;
-    private int passcodeType;
-    private String checkingPasscode;
-    private CharSequence sendText;
-    private boolean backToWallet;
-
-    private boolean globalIgnoreTextChange;
-
-    private CurrencyList fragmentToRemove;
-
     private long showTime;
-    private ArrayList<Integer> checkWordIndices;
 
     public static final int TYPE_CREATE = 0;
-    public static final int TYPE_KEY_GENERATED = 1;
     public static final int TYPE_READY = 2;
-    public static final int TYPE_TOO_BAD = 3;
-    public static final int TYPE_24_WORDS = 4;
     public static final int TYPE_WORDS_CHECK = 5;
-    public static final int TYPE_IMPORT = 6;
-    public static final int TYPE_PERFECT = 7;
     public static final int TYPE_SET_PASSCODE = 8;
     public static final int TYPE_SEND_DONE = 9;
     public boolean is_active = false;
@@ -241,7 +218,6 @@ public class CurrencyList extends BaseFragment{
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
-        //layoutParams.addRule(ScrollView.SCROLL_AXIS_HORIZONTAL);
         horizontalScrollView.setLayoutParams(layoutParams);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -266,7 +242,6 @@ public class CurrencyList extends BaseFragment{
 
         relativeLayout.setBackgroundColor(Color.GRAY);
         return relativeLayout;
-        //return currency_list;
     }
     public void sync_currencies(Context context) {
         if (!is_active) {
@@ -313,8 +288,8 @@ public class CurrencyList extends BaseFragment{
 
     public void prepare_data(List<Data> data_list){
         List<Currency> currencies = new ArrayList<>();
-        Currency c = new Currency(1, 0, "", "Name","","","Price","24h%",
-                "7d%","Market Cap","Volume(24h)","");
+        Currency c = new Currency(1, 0, "", "Name","","","Price","24h",
+                "7d","Market Cap","Volume(24h)","");
         currencies.add(c);
         int x;
 
