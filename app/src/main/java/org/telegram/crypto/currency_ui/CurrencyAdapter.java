@@ -166,8 +166,14 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Conten
     public int convertDpToPixel(int dp){
         Resources r = context.getResources();
         float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
+        return dp;
+    }
+    public int convertDpToPixelX(int dp){
+        Resources r = context.getResources();
+        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
         return (int) px;
     }
+
 
     public RelativeLayout create_item(Context context) {
      TextView title,rank,symbol,cmd,price,today,week,market,volume,volumex;
@@ -175,12 +181,12 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Conten
         RelativeLayout relativeLayout = new RelativeLayout(context);
         RelativeLayout.LayoutParams lin = new RelativeLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                 convertDpToPixel(100));
+                 convertDpToPixelX(40));
         RelativeLayout.LayoutParams pr =
                 new RelativeLayout.LayoutParams(convertDpToPixel(40), convertDpToPixel(40));
 
         lin.setMargins(5, 1, 5, 1);
-        relativeLayout.setPadding(2,25,2,2);
+        relativeLayout.setPadding(2,2,2,2);
 
 
         relativeLayout.setBackgroundColor(Color.WHITE);
@@ -234,7 +240,7 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Conten
                 icon = root.findViewById(x);
                 RelativeLayout.LayoutParams pri = (RelativeLayout.LayoutParams) icon.getLayoutParams();
                 pri.addRule(RelativeLayout.END_OF, 0);
-                pri.setMargins(50,5,2,2);
+                pri.setMargins(50,20,2,2);
                 icon.setLayoutParams(pri);
                 //continue;
             }else {
