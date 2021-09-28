@@ -2,6 +2,7 @@ package org.telegram.crypto.currency_ui;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -9,6 +10,7 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.text.Html;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -161,15 +163,21 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Conten
         this.listener = listener;
     }
 
+    public int convertDpToPixel(int dp){
+        Resources r = context.getResources();
+        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
+        return (int) px;
+    }
 
     public RelativeLayout create_item(Context context) {
-        TextView title,rank,symbol,cmd,price,today,week,market,volume,volumex;
+     TextView title,rank,symbol,cmd,price,today,week,market,volume,volumex;
         ImageView icon;
         RelativeLayout relativeLayout = new RelativeLayout(context);
         RelativeLayout.LayoutParams lin = new RelativeLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                100);
-        RelativeLayout.LayoutParams pr = new RelativeLayout.LayoutParams(40, 40);
+                 convertDpToPixel(100));
+        RelativeLayout.LayoutParams pr =
+                new RelativeLayout.LayoutParams(convertDpToPixel(40), convertDpToPixel(40));
 
         lin.setMargins(5, 1, 5, 1);
         relativeLayout.setPadding(2,25,2,2);
@@ -237,7 +245,7 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Conten
                 RelativeLayout.LayoutParams pr = (RelativeLayout.LayoutParams) text.getLayoutParams();
                 text.setTextColor(Color.BLACK);
                 text.setTextSize(13);
-                pr.height = 30;
+                pr.height = convertDpToPixel(30);
                 text.setTypeface(null, Typeface.BOLD);
                 if (x > 2) {
                     if (x != 5) {
@@ -261,7 +269,7 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Conten
                     } else {
                         pr.addRule(RelativeLayout.END_OF, x - 3);
                     }
-                    pr.width = 300;
+                    pr.width = convertDpToPixel(300);
                     text.setGravity(Gravity.RIGHT);
                 } else if( x != 1){
                     if(x == 0){
@@ -269,7 +277,7 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Conten
                         pr.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                     }else {
                         pr.addRule(RelativeLayout.END_OF, 1);
-                        pr.width = 200;
+                        pr.width =convertDpToPixel(200);
                     }
                 }
                 pr.addRule(RelativeLayout.CENTER_VERTICAL);
